@@ -56,11 +56,54 @@ class Prato {
     return view;
   }
 }
-
 class Bebida {
 
   constructor(bebida){
-    
+    this.elemento = null;
+    this.bebida = bebida;
+  
+    this.draw();
+  }
+
+  selecionarBebida(){
+    const selecionado = document.querySelector(".bebida .selecionado");
+    if (selecionado !== null) {
+      selecionado.classList.remove("selecionado");
+    }
+    this.elemento.classList.add("selecionado");
+  
+    bebidaSelecionada = { 
+      nome: this.bebida.nome, 
+      preco: this.bebida.preco 
+    };
+    verificarPedido();
+  }
+
+  draw(){
+    const bebidasContainer = document.querySelector(".opcoes.bebida");
+    bebidasContainer.appendChild(this.getBebidaView())
+  }
+
+  getBebidaView() {
+    const view = document.createElement("div");
+    view.classList.add("opcao");
+    view.addEventListener("click", () => {
+      this.elemento = view;
+      this.selecionarBebida();
+    });
+    view.innerHTML = `
+          <img src="${this.bebida.imagem}" />
+          <div class="titulo">${this.bebida.nome}</div>
+          <div class="descricao">${this.bebida.descricao}</div>
+          <div class="fundo">
+              <div class="preco">R$ ${this.bebida.preco.toFixed(2)}</div>
+              <div class="check">
+                  <ion-icon name="checkmark-circle"></ion-icon>
+              </div>
+          </div>
+      `;
+  
+    return view;
   }
 }
 
@@ -128,17 +171,8 @@ const sobremesas = [
 ];
 
 pratos.forEach((prato) => new Prato(prato));
+bebidas.forEach((bebidas) => new Bebida(bebidas));
 
-function selecionarBebida(elemento, { nome, preco }) {
-  const selecionado = document.querySelector(".bebida .selecionado");
-  if (selecionado !== null) {
-    selecionado.classList.remove("selecionado");
-  }
-  elemento.classList.add("selecionado");
-
-  bebidaSelecionada = { nome, preco };
-  verificarPedido();
-}
 
 function selecionarSobremesa(elemento, { nome, preco }) {
   const selecionado = document.querySelector(".sobremesa .selecionado");
@@ -209,26 +243,6 @@ function verificarPedido() {
   }
 }
 
-function getBebidaView(bebida) {
-  const view = document.createElement("div");
-  view.classList.add("opcao");
-  view.addEventListener("click", () => {
-    selecionarBebida(view, bebida.nome, bebida.preco);
-  });
-  view.innerHTML = `
-        <img src="${bebida.imagem}" />
-        <div class="titulo">${bebida.nome}</div>
-        <div class="descricao">${bebida.descricao}</div>
-        <div class="fundo">
-            <div class="preco">R$ ${bebida.preco.toFixed(2)}</div>
-            <div class="check">
-                <ion-icon name="checkmark-circle"></ion-icon>
-            </div>
-        </div>
-    `;
-
-  return view;
-}
 
 function getSobremesaView(sobremesa) {
   const view = document.createElement("div");
@@ -253,10 +267,10 @@ function getSobremesaView(sobremesa) {
 
 // const pratosContainer = document.querySelector(".opcoes.prato");
 // pratos.forEach((prato) => pratosContainer.appendChild(getPratoView(prato)));
-const bebidasContainer = document.querySelector(".opcoes.bebida");
-bebidas.forEach((bebida) =>
-  bebidasContainer.appendChild(getBebidaView(bebida))
-);
+// const bebidasContainer = document.querySelector(".opcoes.bebida");
+// bebidas.forEach((bebida) =>
+//   bebidasContainer.appendChild(getBebidaView(bebida))
+// );
 const sobremesasContainer = document.querySelector(".opcoes.sobremesa");
 sobremesas.forEach((sobremesa) =>
   sobremesasContainer.appendChild(getSobremesaView(sobremesa))
